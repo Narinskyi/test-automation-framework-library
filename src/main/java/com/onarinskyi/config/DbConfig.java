@@ -1,5 +1,6 @@
 package com.onarinskyi.config;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import javax.sql.DataSource;
 @Configuration
 @PropertySource("classpath:database.properties")
 public class DbConfig {
+
+    private Logger log = Logger.getLogger(DbConfig.class);
 
     @Value("${db.driver}")
     private String driver;
@@ -36,10 +39,15 @@ public class DbConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName(driver);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        try {
+            dataSource.setDriverClassName(driver);
+            dataSource.setUrl(url);
+            dataSource.setUsername(username);
+            dataSource.setPassword(password);
+        } catch (IllegalStateException e) {
+            log.warn("Database data source was not set properly. If you'd like to use database connection please check your database.properties");
+            return dataSource;
+        }
 
         return dataSource;
     }
