@@ -123,6 +123,16 @@ public class WebDriverFactory {
                         System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
                         break;
 
+                    case HEADLESS:
+                        pathToExecutableFile = "drivers/macos/chromedriver";
+                        System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
+                        break;
+
+                    case MOBILE_EMULATOR_CHROME:
+                        pathToExecutableFile = "drivers/macos/chromedriver";
+                        System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
+                        break;
+
                     default:
                         throw new UnknownBrowserException(browser + "is not configured in the framework");
                 }
@@ -151,12 +161,12 @@ public class WebDriverFactory {
                         break;
 
                     case HEADLESS:
-                        pathToExecutableFile = "drivers/windows/chromedriver.ex";
+                        pathToExecutableFile = "drivers/windows/chromedriver.exe";
                         System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
                         break;
 
                     case MOBILE_EMULATOR_CHROME:
-                        pathToExecutableFile = "drivers/windows/chromedriver.ex";
+                        pathToExecutableFile = "drivers/windows/chromedriver.exe";
                         System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
                         break;
 
