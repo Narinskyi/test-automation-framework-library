@@ -5,6 +5,7 @@ import com.onarinskyi.environment.OperatingSystem;
 import com.onarinskyi.environment.Timeout;
 import com.onarinskyi.environment.UrlResolver;
 import com.onarinskyi.exceptions.UnknownBrowserException;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -24,7 +25,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,7 +82,7 @@ public class WebDriverFactory {
     private Browser browser;
 
     public WebDriverDecorator getInitialDriver() {
-        initDriversFor(operatingSystem);
+        initDriverFor(browser, operatingSystem);
 
         WebDriver driver = useGrid ? getRemoteDriver(browser, hubHostUrl) :
                 getLocalDriver(browser);
@@ -86,20 +90,83 @@ public class WebDriverFactory {
         return new WebDriverDecorator(driver, timeout, urlResolver, failOnException);
     }
 
-    private void initDriversFor(OperatingSystem operatingSystem) {
+    private void extractDriverExecutable(String pathToExecutableFile) {
+
+        try (InputStream copiedFileInputStream = WebDriverFactory.class.getClassLoader().getResourceAsStream(pathToExecutableFile)) {
+
+            File copiedFile = new File("src/main/" +
+                    pathToExecutableFile.substring(pathToExecutableFile.lastIndexOf("drivers/", pathToExecutableFile.length())));
+
+            if (!copiedFile.exists()) {
+                FileUtils.copyInputStreamToFile(copiedFileInputStream, copiedFile);
+                copiedFile.setExecutable(true);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initDriverFor(Browser browser, OperatingSystem operatingSystem) {
+        String pathToExecutableFile = "";
+
         switch (operatingSystem) {
+
             case MACOS:
-                System.setProperty("webdriver.chrome.driver", "src/main/java/com/onarinskyi/drivers/macos/chromedriver");
-                System.setProperty("webdriver.gecko.driver", "src/main/java/com/onarinskyi/drivers/macos/geckodriver");
+                switch (browser) {
+                    case CHROME:
+                        pathToExecutableFile = "drivers/macos/chromedriver";
+                        System.setProperty("webdriver.chrome.driver", "src/main/" + pathToExecutableFile);
+                        break;
+
+                    case FIREFOX:
+                        pathToExecutableFile = "drivers/macos/geckodriver";
+                        System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
+                        break;
+
+                    default:
+                        throw new UnknownBrowserException(browser + "is not configured in the framework");
+                }
                 break;
+
             case WINDOWS:
-                System.setProperty("webdriver.chrome.driver", "src/main/java/com/onarinskyi/drivers/windows/chromedriver.exe");
-                System.setProperty("webdriver.ie.driver", "src/main/java/com/onarinskyi/drivers/windows/IEDriverServer.exe");
-                System.setProperty("webdriver.edge.driver", "src/main/java/com/onarinskyi/drivers/windows/MicrosoftWebDriver.exe");
-                System.setProperty("webdriver.gecko.driver", "src/main/java/com/onarinskyi/drivers/windows/geckodriver.exe");
-                System.setProperty("phantomjs.binary.path", "src/main/java/com/onarinskyi/drivers/windows/phantomjs.exe");
+                switch (browser) {
+                    case CHROME:
+                        pathToExecutableFile = "drivers/windows/chromedriver.exe";
+                        System.setProperty("webdriver.chrome.driver", pathToExecutableFile);
+                        break;
+
+                    case FIREFOX:
+                        pathToExecutableFile = "drivers/windows/geckodriver.exe";
+                        System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
+                        break;
+
+                    case IE:
+                        pathToExecutableFile = "drivers/windows/IEDriverServer.exe";
+                        System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
+                        break;
+
+                    case EDGE:
+                        pathToExecutableFile = "drivers/windows/MicrosoftWebDriver.exe";
+                        System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
+                        break;
+
+                    case HEADLESS:
+                        pathToExecutableFile = "drivers/windows/chromedriver.ex";
+                        System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
+                        break;
+
+                    case MOBILE_EMULATOR_CHROME:
+                        pathToExecutableFile = "drivers/windows/chromedriver.ex";
+                        System.setProperty("webdriver.gecko.driver", pathToExecutableFile);
+                        break;
+
+                    default:
+                        throw new UnknownBrowserException(browser + "is not configured in the framework");
+                }
                 break;
         }
+
+        extractDriverExecutable(pathToExecutableFile);
     }
 
     private WebDriver getLocalDriver(Browser browser) {
@@ -226,7 +293,7 @@ public class WebDriverFactory {
             }
 
             if (!devicePixelRatio.isEmpty()) {
-                deviceMetrics.put("pixelRatio",Double.valueOf(devicePixelRatio));
+                deviceMetrics.put("pixelRatio", Double.valueOf(devicePixelRatio));
             }
 
             mobileEmulation.put("deviceMetrics", deviceMetrics);
