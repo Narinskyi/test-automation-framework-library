@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 @ContextConfiguration(classes = AppConfig.class)
 @TestExecutionListeners(inheritListeners = false,
         listeners = {DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class})
-public abstract class AbstractTestNGTest extends AbstractTestNGSpringContextTests {
+public abstract class AbstractTest extends AbstractTestNGSpringContextTests {
 
     protected SoftAssert softly = new SoftAssert();
 

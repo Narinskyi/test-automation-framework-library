@@ -8,7 +8,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Listeners;
 
 @Listeners({UiTestExecutionListener.class, TestNGSuiteListener.class})
-public abstract class AbstractUITest extends AbstractTestNGTest {
+public abstract class AbstractUITest extends AbstractTest {
 
     @Autowired
     protected WebDriverDecorator driver;
