@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.yandex.qatools.allure.annotations.Attachment;
 
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -469,5 +470,10 @@ public class WebDriverDecorator implements WebDriver {
     public byte[] takeScreenshot() {
         log.info("Taking screenshot on test failure");
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+    }
+
+    @PreDestroy
+    public void destroy() {
+        quit();
     }
 }
