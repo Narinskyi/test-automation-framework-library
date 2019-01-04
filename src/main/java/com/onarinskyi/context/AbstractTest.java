@@ -25,4 +25,3 @@ public abstract class AbstractTest extends AbstractTestNGSpringContextTests {
         ApplicationContextManager.initWith(applicationContext);
     }
 }
-
