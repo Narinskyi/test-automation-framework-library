@@ -11,7 +11,7 @@ public class TestNGExecutionListener extends TestListenerAdapter {
     @Override
     public void onTestStart(ITestResult result) {
         System.out.println();
-
+        System.out.println("=================================================================================");
         System.out.println("  _____                _       ____    _                    _                _ \n" +
                 " |_   _|   ___   ___  | |_    / ___|  | |_    __ _   _ __  | |_    ___    __| |\n" +
                 "   | |    / _ \\ / __| | __|   \\___ \\  | __|  / _` | | '__| | __|  / _ \\  / _` |\n" +
@@ -20,16 +20,14 @@ public class TestNGExecutionListener extends TestListenerAdapter {
                 "                                                                               ");
         log.info("Starting " + result.getTestClass().getRealClass().getName() + " > " +
                 result.getMethod().getMethodName() + " test");
-
-        System.out.println();
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        log.info("Test: " + result.getTestClass().getRealClass().getName() + " > " +
-                result.getMethod().getMethodName() + " passed");
-
-        System.out.println();
+        System.out.println((char) 27 + "[32m" +
+                "Test: " + result.getTestClass().getRealClass().getName() + " > " +
+                result.getMethod().getMethodName() + " passed"
+                + (char) 27 + "[0m");
 
         System.out.println((char) 27 + "[32m" +
                 "  _____                _       ____                                   _ \n" +
@@ -39,16 +37,12 @@ public class TestNGExecutionListener extends TestListenerAdapter {
                 "   |_|    \\___| |___/  \\__|   |_|      \\__,_| |___/ |___/  \\___|  \\__,_|\n" +
                 "                                                                        "
                 + (char) 27 + "[0m");
-
-        System.out.println();
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
-        log.info("Test: " + result.getTestClass().getRealClass().getName() + " > " +
+        System.err.println("Test: " + result.getTestClass().getRealClass().getName() + " > " +
                 result.getMethod().getMethodName() + " failed");
-
-        System.out.println();
 
         System.err.println("  _____                _       _____           _   _              _ \n" +
                 " |_   _|   ___   ___  | |_    |  ___|   __ _  (_) | |   ___    __| |\n" +
@@ -56,7 +50,5 @@ public class TestNGExecutionListener extends TestListenerAdapter {
                 "   | |   |  __/ \\__ \\ | |_    |  _|   | (_| | | | | | |  __/ | (_| |\n" +
                 "   |_|    \\___| |___/  \\__|   |_|      \\__,_| |_| |_|  \\___|  \\__,_|\n" +
                 "                                                                    ");
-
-        System.out.println();
     }
 }
