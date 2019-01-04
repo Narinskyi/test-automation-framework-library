@@ -1,4 +1,4 @@
-package com.onarinskyi.listeners;
+package com.onarinskyi.context;
 
 import org.apache.log4j.Logger;
 import org.testng.ITestResult;

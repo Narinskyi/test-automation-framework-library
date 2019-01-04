@@ -471,9 +471,4 @@ public class WebDriverDecorator implements WebDriver {
         log.info("Taking screenshot on test failure");
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
-
-    @PreDestroy
-    public void destroy() {
-        quit();
-    }
 }

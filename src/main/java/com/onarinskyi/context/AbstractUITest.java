@@ -1,8 +1,6 @@
 package com.onarinskyi.context;
 
 import com.onarinskyi.driver.WebDriverDecorator;
-import com.onarinskyi.listeners.TestNGSuiteListener;
-import com.onarinskyi.listeners.UiTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Listeners;
@@ -20,6 +18,10 @@ public abstract class AbstractUITest extends AbstractTest {
     public void quitDriver() {
         driver.quit();
         threadLocal.remove();
+    }
+
+    WebDriverDecorator getDriver() {
+        return driver;
     }
 }
 
