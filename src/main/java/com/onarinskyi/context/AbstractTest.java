@@ -16,5 +16,4 @@ import org.testng.asserts.SoftAssert;
 public abstract class AbstractTest extends AbstractTestNGSpringContextTests {
 
     protected SoftAssert softly = new SoftAssert();
-
 }
